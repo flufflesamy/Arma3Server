@@ -166,6 +166,7 @@ armaprocess = subprocess.Popen(
 try:
     armaprocess.wait()
     logfile.close()
+    hc_logfile.close()
 except KeyboardInterrupt:
     subprocess.call(["echo", "Shutting down"])
     armaprocess.send_signal(signal.SIGINT)
