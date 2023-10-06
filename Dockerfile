@@ -1,9 +1,9 @@
 FROM debian:bullseye-slim as build_stage
 
-LABEL org.opencontainers.image.authors="Myles Gray, Florian Linke"
-LABEL org.opencontainers.image.source='https://github.com/mylesagray/arma3server'
-LABEL org.opencontainers.image.url='https://github.com/mylesagray/arma3server'
-LABEL org.opencontainers.image.documentation='https://github.com/mylesagray/arma3server'
+LABEL org.opencontainers.image.authors="Amy Poon"
+LABEL org.opencontainers.image.source='https://github.com/flufflesamy/Arma3Server'
+LABEL org.opencontainers.image.url='https://github.com/flufflesamy/Arma3Server'
+LABEL org.opencontainers.image.documentation='https://github.com/flufflesamy/Arma3Server'
 
 ENV PUID=1000 \
     PGID=1000 \
@@ -30,12 +30,12 @@ RUN set -x \
     && dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get install -y --no-install-recommends --no-install-suggests \
-        lib32stdc++6=10.2.1-6 \
-		lib32gcc-s1=10.2.1-6 \
-		ca-certificates=20210119 \
-		nano=5.4-2+deb11u1 \
-		curl=7.74.0-1.3+deb11u3 \
-		locales=2.31-13+deb11u4 \
+        lib32stdc++6 \
+		lib32gcc-s1 \
+		ca-certificates \
+		nano \
+		curl \
+		locales \
         build-essential \
         libsdl2-2.0-0:i386 \
         python3 \
