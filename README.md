@@ -1,10 +1,6 @@
-[![Publish Image](https://github.com/mylesagray/Arma3Server/actions/workflows/publish.yml/badge.svg)](https://github.com/mylesagray/Arma3Server/actions/workflows/publish.yml)
-
 # Arma 3 Dedicated Server
 
-This is a docker image for hosting an Arma 3 dedicated server. It is forked from [BrettMayson's image](https://github.com/brettmayson/arma3server), with some changes made by me to fix a couple of issues I was having with it, as well as making modification of the basic.cfg settings a little bit easier.
-
-We removed the need to statically pass in the password via env vars, and accomodate 2FA via a startup script that prompts you to exec into the container to login, this means that it doesn't stun-lock your login so that it rate limits your login.
+This is a docker image for hosting an Arma 3 dedicated server. It is forked from [mylesgray's image]((https://github.com/mylesagray/Arma3Server)). This fork was made because headless clients were broken in the forked project, and as such this fork fixes that issue. No other major changes were made.
 
 ## Usage
 
@@ -21,7 +17,7 @@ We removed the need to statically pass in the password via env vars, and accomod
         -v path/to/arma3:/arma3/ \
         --env-file ".env" \
         --restart unless-stopped \
-        ghcr.io/mylesagray/arma3-server
+        ghcr.io/flufflesamy/arma3server:latest
 ```
 
 ### docker-compose
@@ -122,8 +118,5 @@ Via the generated url you can now invite the bot to your preferred server, check
 
 ## TODO
 
-* Clean up Dockerfile to make builds faster
-* Make bot resilient to `SteamQuery` failures
-* Re-visit Exception handling across the board
-* Add unit tests
-* Run `autopep8` and `pylint` as part of CI
+* Rebase image to a newer version of Debian
+* Add logging for multiple headless clients
