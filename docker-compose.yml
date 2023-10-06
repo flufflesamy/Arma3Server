@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   arma3:
-    image: ghcr.io/mylesagray/arma3-server:latest
+    image: ghcr.io/flufflesamy/arma3server:latest
     build: .
     ports:
         - "2302:2302/udp" 
