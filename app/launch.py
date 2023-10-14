@@ -133,13 +133,15 @@ if clients != 0:
     if "password" in config_values:
         client_launchopts += " -password={}".format(config_values["password"])
 
+    hc_logfile = []
+
     for i in range(0, clients):
         hc_launchopts = client_launchopts + ' -name="{}-hc-{}"'.format(
             os.environ["ARMA_PROFILE"], i
         )
         print("LAUNCHING ARMA CLIENT {} WITH".format(i), hc_launchopts)
-        hc_logfile = open('/arma3/hc_startup.log', 'w', encoding='utf-8')
-        subprocess.Popen([os.environ["ARMA_BINARY"], hc_launchopts], stdout=hc_logfile, stderr=hc_logfile)
+        hc_logfile.append(open('/arma3/hc{}_startup.log'.format(i), 'w', encoding='utf-8'))
+        subprocess.Popen([os.environ["ARMA_BINARY"], hc_launchopts], stdout=hc_logfile[i], stderr=hc_logfile[i])
 else:
     launchopts += ' -config="/arma3/configs/{}"'.format(CONFIG_FILE)
 
@@ -166,7 +168,8 @@ armaprocess = subprocess.Popen(
 try:
     armaprocess.wait()
     logfile.close()
-    hc_logfile.close()
+    for i in range(0, clients):
+        hc_logfile[i].close()
 except KeyboardInterrupt:
     subprocess.call(["echo", "Shutting down"])
     armaprocess.send_signal(signal.SIGINT)
