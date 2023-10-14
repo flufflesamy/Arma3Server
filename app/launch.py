@@ -103,6 +103,10 @@ if os.environ["ARMA_CDLC"] != "":
     for cdlc in os.environ["ARMA_CDLC"].split(";"):
         launchopts += " -mod={}".format(cdlc)
 
+# Rename mods to lowercase
+print("Renaming mod files to lower case")
+subprocess.call(["/bin/bash", "/app/mods.sh"])
+
 # Check if using headless clients and create configs if so
 
 clients = int(os.environ["HEADLESS_CLIENTS"])
@@ -133,13 +137,15 @@ if clients != 0:
     if "password" in config_values:
         client_launchopts += " -password={}".format(config_values["password"])
 
+    hc_logfile = []
+
     for i in range(0, clients):
         hc_launchopts = client_launchopts + ' -name="{}-hc-{}"'.format(
             os.environ["ARMA_PROFILE"], i
         )
         print("LAUNCHING ARMA CLIENT {} WITH".format(i), hc_launchopts)
-        hc_logfile = open('/arma3/hc_startup.log', 'w', encoding='utf-8')
-        subprocess.Popen([os.environ["ARMA_BINARY"], hc_launchopts], stdout=hc_logfile, stderr=hc_logfile)
+        hc_logfile.append(open('/arma3/hc{}_startup.log'.format(i), 'w', encoding='utf-8'))
+        subprocess.Popen([os.environ["ARMA_BINARY"], hc_launchopts], stdout=hc_logfile[i], stderr=hc_logfile[i])
 else:
     launchopts += ' -config="/arma3/configs/{}"'.format(CONFIG_FILE)
 
@@ -150,13 +156,10 @@ launchopts += ' -port={} -name="{}" -profiles="/arma3/configs/profiles"'.format(
 )
 
 # Load servermods if exists
-
 if os.path.exists("servermods"):
     launchopts += mod_param("serverMod", local.mods("servermods"))
 
 # Launch ArmA Server
-print("Renaming mod files to lower case")
-subprocess.call(["/bin/bash", "/app/mods.sh"])
 print("Launching Discord bot")
 botprocess = subprocess.Popen(["python3", "/app/bot.py"])
 print("Launching ArmA Server with options:", launchopts, flush=True)
@@ -166,7 +169,8 @@ armaprocess = subprocess.Popen(
 try:
     armaprocess.wait()
     logfile.close()
-    hc_logfile.close()
+    for i in range(0, clients):
+        hc_logfile[i].close()
 except KeyboardInterrupt:
     subprocess.call(["echo", "Shutting down"])
     armaprocess.send_signal(signal.SIGINT)
