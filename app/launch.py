@@ -103,6 +103,10 @@ if os.environ["ARMA_CDLC"] != "":
     for cdlc in os.environ["ARMA_CDLC"].split(";"):
         launchopts += " -mod={}".format(cdlc)
 
+# Rename mods to lowercase
+print("Renaming mod files to lower case")
+subprocess.call(["/bin/bash", "/app/mods.sh"])
+
 # Check if using headless clients and create configs if so
 
 clients = int(os.environ["HEADLESS_CLIENTS"])
@@ -152,13 +156,10 @@ launchopts += ' -port={} -name="{}" -profiles="/arma3/configs/profiles"'.format(
 )
 
 # Load servermods if exists
-
 if os.path.exists("servermods"):
     launchopts += mod_param("serverMod", local.mods("servermods"))
 
 # Launch ArmA Server
-print("Renaming mod files to lower case")
-subprocess.call(["/bin/bash", "/app/mods.sh"])
 print("Launching Discord bot")
 botprocess = subprocess.Popen(["python3", "/app/bot.py"])
 print("Launching ArmA Server with options:", launchopts, flush=True)
