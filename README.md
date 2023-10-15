@@ -119,4 +119,3 @@ Via the generated url you can now invite the bot to your preferred server, check
 ## TODO
 
 * Rebase image to a newer version of Debian
-* Add logging for multiple headless clients
