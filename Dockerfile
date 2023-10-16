@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim as build_stage
+FROM debian:bookworm-slim as build_stage
 
 LABEL org.opencontainers.image.authors="Amy Poon"
 LABEL org.opencontainers.image.source='https://github.com/flufflesamy/Arma3Server'
@@ -25,6 +25,8 @@ ENV PUID=1000 \
     USER="steam"
 ENV HOMEDIR "/home/${USER}"
 ENV STEAMCMDDIR "${HOMEDIR}/steamcmd"
+ENV VIRTUAL_ENV="${HOMEDIR}/venv}"
+ENV PIPENV_IGNORE_VIRTUALENVS=1 
 
 RUN set -x \
     && dpkg --add-architecture i386 \
@@ -71,10 +73,13 @@ RUN set -x \
     && chmod 755 "${STEAM_APPDIR}" \
     && chown -R "${USER}:${USER}" "${STEAM_APPDIR}" 
 
-FROM build_stage AS bullseye-root
+# Disable externally managed warning for Python 3.11
+RUN rm "/usr/lib/python3.11/EXTERNALLY-MANAGED"
+
+FROM build_stage AS runtime-root
 WORKDIR ${STEAMCMDDIR}
 
-FROM bullseye-root AS bullseye
+FROM runtime-root AS runtime
 # Add Tini
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
