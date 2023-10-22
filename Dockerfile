@@ -25,8 +25,6 @@ ENV PUID=1000 \
     USER="steam"
 ENV HOMEDIR "/home/${USER}"
 ENV STEAMCMDDIR "${HOMEDIR}/steamcmd"
-ENV VIRTUAL_ENV="${HOMEDIR}/venv}"
-ENV PIPENV_IGNORE_VIRTUALENVS=1 
 
 RUN set -x \
     && dpkg --add-architecture i386 \
